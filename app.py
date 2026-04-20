@@ -1,24 +1,35 @@
-
 import streamlit as st
 import numpy as np
 import joblib
+import pandas as pd
 
+# Load model
 model = joblib.load("stress_model.pkl")
 
 st.title("🧠 Stress Detection AI System")
 
-st.write("Enter values for prediction")
+st.write("Enter values based on dataset features")
 
-f1 = st.number_input("Feature 1")
-f2 = st.number_input("Feature 2")
-f3 = st.number_input("Feature 3")
-f4 = st.number_input("Feature 4")
+# Load dataset just to get feature structure (IMPORTANT FIX)
+df = pd.read_csv("stress.csv")
+target = "Stress_Detection"
 
-if st.button("Predict"):
-    data = np.array([[f1, f2, f3, f4]])
-    pred = model.predict(data)[0]
+features = df.drop(target, axis=1).columns
 
-    if pred == 1:
-        st.error("HIGH STRESS ⚠")
+inputs = []
+
+# Dynamically create inputs
+for col in features:
+    val = st.number_input(f"{col}", value=0.0)
+    inputs.append(val)
+
+# Predict
+if st.button("Predict Stress"):
+    input_array = np.array(inputs).reshape(1, -1)
+    
+    prediction = model.predict(input_array)[0]
+
+    if prediction == 1:
+        st.error("⚠ HIGH STRESS DETECTED")
     else:
-        st.success("LOW STRESS ✅")
+        st.success("✅ LOW STRESS")
