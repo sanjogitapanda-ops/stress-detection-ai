@@ -3,39 +3,46 @@ import numpy as np
 import joblib
 import pandas as pd
 
-# Load model
+# Load the trained model
 model = joblib.load("stress_model.pkl")
 
 st.title("🧠 Stress Detection AI System")
-st.write("Enter values below and press 'Predict'")
+st.write("Enter the required details below and click 'Predict Stress'.")
 
-# Load dataset for feature names
+# Load the CSV to get the column names automatically
+# Ensure stress.csv is uploaded to your GitHub repository
 df = pd.read_csv("stress.csv")
 target = "Stress_Detection"
 features = df.drop(target, axis=1).columns
 
-# Use a form to prevent the page from refreshing after every single input
-with st.form("input_form"):
+# Using a form helps group inputs and allows you to use 'Tab' to move between them
+with st.form("user_input_form"):
     inputs = []
     
     for col in features:
-        # st.text_input removes the "0.00" and the +/- buttons
-        val = st.text_input(f"Enter {col}", placeholder="Type here...")
+        # st.text_input stays empty (no 0.00) and has no irritating buttons
+        val = st.text_input(f"Enter {col}", placeholder="Type value here...")
         inputs.append(val)
     
-    # The submit button for the form
-    submit_button = st.form_submit_button("Predict Stress")
+    # Submit button for the form
+    submit = st.form_submit_button("Predict Stress")
 
-if submit_button:
+if submit:
     try:
-        # Convert text inputs to numbers for the model
-        input_array = np.array([float(i) for i in inputs]).reshape(1, -1)
-        
-        prediction = model.predict(input_array)
-
-        if prediction == 1:
-            st.error("⚠ HIGH STRESS DETECTED")
+        # Check if any field was left empty
+        if any(x == "" for x in inputs):
+            st.warning("Please fill in all the fields before predicting.")
         else:
-            st.success("✅ LOW STRESS")
+            # Convert text inputs to numbers for the model
+            input_array = np.array([float(i) for i in inputs]).reshape(1, -1)
+            
+            # Make the prediction
+            prediction = model.predict(input_array)
+
+            if prediction == 1:
+                st.error("⚠ HIGH STRESS DETECTED")
+            else:
+                st.success("✅ LOW STRESS")
+                
     except ValueError:
-        st.warning("Please enter valid numbers in all fields."
+        st.warning("Please enter valid numbers in all fields (e.g., use 5.5 instead of text).")
