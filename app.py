@@ -65,7 +65,8 @@ with st.form("input_form"):
         social = st.number_input("Social Interactions", value=5.0)
         meditation = st.selectbox("Meditation Practice", list(yes_no_map.keys()))
         exercise = st.selectbox("Exercise Type", list(exercise_map.keys()))
-        bp = st.number_input("Blood Pressure", value=120.0)
+        bp = st.number_input("Blood Pressure", value=120.0) 
+        chol = st.number_input("Cholesterol Level", value=180.0)
         sugar = st.number_input("Blood Sugar Level", value=90.0)
 
     submit = st.form_submit_button("Predict Stress Level")
@@ -84,7 +85,7 @@ if submit:
             sleep_dur, sleep_qual, wake_time, bed_time, activity, screen,
             caffeine, alcohol, yes_no_map[smoking], work_hrs, travel, 
             social, yes_no_map[meditation], exercise_map[exercise],
-            bp,sugar
+            bp, chol , sugar
         ]
         
         prediction = model.predict(np.array(feature_values).reshape(1, -1))
