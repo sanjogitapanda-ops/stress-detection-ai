@@ -66,7 +66,6 @@ with st.form("input_form"):
         meditation = st.selectbox("Meditation Practice", list(yes_no_map.keys()))
         exercise = st.selectbox("Exercise Type", list(exercise_map.keys()))
         bp = st.number_input("Blood Pressure", value=120.0)
-        chol = st.number_input("Cholesterol Level", value=180.0)
         sugar = st.number_input("Blood Sugar Level", value=90.0)
 
     submit = st.form_submit_button("Predict Stress Level")
