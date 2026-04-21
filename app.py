@@ -84,7 +84,7 @@ if submit:
             sleep_dur, sleep_qual, wake_time, bed_time, activity, screen,
             caffeine, alcohol, yes_no_map[smoking], work_hrs, travel, 
             social, yes_no_map[meditation], exercise_map[exercise],
-            bp, chol, sugar
+            bp,sugar
         ]
         
         prediction = model.predict(np.array(feature_values).reshape(1, -1))
